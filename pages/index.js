@@ -60,12 +60,10 @@ export default function Home() {
         if (
           celdas[antiguaPosicionX][antiguaPosicionY].mover(
             nuevaPosicionX,
-            nuevaPosicionY
+            nuevaPosicionY,
+            fichaAntigua
           )
         ) {
-          if (fichaAntigua) {
-            fichaAntigua.vivo = false;
-          }
           reAjustarCeldas();
         }
         setCeldaSelecionada();
@@ -117,7 +115,7 @@ export default function Home() {
         }}
       >
         <h1>Tablero de Ajedrez</h1>
-        <h3> Versión Alfa 1.0 </h3>
+        <h3> Versión Alfa 1.01 </h3>
       </div>
       <div style={{ display: "flex" }}>
         <div>
