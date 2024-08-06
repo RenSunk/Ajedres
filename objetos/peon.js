@@ -19,34 +19,8 @@ export class Peon {
 
   mover(x, y, fichaAntigua) {
     if (this.vivo) {
-      if (this.blanco) {
-        if (this.x + 2 == x && this.y == y && this.primermovimiento) {
-          // movimiento de dos casillas
-          return this.aplicarMovimiento(x, y, fichaAntigua);
-        } else if (this.x + 1 == x && this.y == y && !fichaAntigua) {
-          // movimiento de una casilla
-          return this.aplicarMovimiento(x, y, fichaAntigua);
-        } else if (this.x + 1 == x && this.y - 1 == y && fichaAntigua) {
-          // movimiento a la izquierda
-          return this.aplicarMovimiento(x, y, fichaAntigua);
-        } else if (this.x + 1 == x && this.y + 1 == y && fichaAntigua) {
-          // movimiento a la derecha
-          return this.aplicarMovimiento(x, y, fichaAntigua);
-        }
-      } else {
-        if (this.x - 2 == x && this.y == y && this.primermovimiento) {
-          // movimiento de dos casillas
-          return this.aplicarMovimiento(x, y, fichaAntigua);
-        } else if (this.x - 1 == x && this.y == y && !fichaAntigua) {
-          // movimeinto de una casilla
-          return this.aplicarMovimiento(x, y, fichaAntigua);
-        } else if (this.x - 1 == x && this.y + 1 == y && fichaAntigua) {
-          // comer a la derecha
-          return this.aplicarMovimiento(x, y, fichaAntigua);
-        } else if (this.x - 1 == x && this.y - 1 == y && fichaAntigua) {
-          // comer a la izquierda
-          return this.aplicarMovimiento(x, y, fichaAntigua);
-        }
+      if(this.movimientoPermitidos(x, y, fichaAntigua)){
+        return this.aplicarMovimiento(x, y, fichaAntigua);
       }
     }
     return false;
@@ -68,5 +42,38 @@ export class Peon {
     }
     this.primermovimiento = false;
     return true;
+  }
+
+  movimientoPermitidos(x, y, fichaAntigua){
+    if (this.blanco) {
+      if (this.x + 2 == x && this.y == y && this.primermovimiento) {
+        // movimiento de dos casillas
+        return true
+      } else if (this.x + 1 == x && this.y == y && !fichaAntigua) {
+        // movimiento de una casilla
+        return true
+      } else if (this.x + 1 == x && this.y - 1 == y && fichaAntigua && !fichaAntigua.blanco) {
+        // movimiento a la izquierda
+        return true
+      } else if (this.x + 1 == x && this.y + 1 == y && fichaAntigua && !fichaAntigua.blanco) {
+        // movimiento a la derecha
+        return true
+      }
+    } else {
+      if (this.x - 2 == x && this.y == y && this.primermovimiento) {
+        // movimiento de dos casillas
+        return true
+      } else if (this.x - 1 == x && this.y == y && !fichaAntigua) {
+        // movimeinto de una casilla
+        return true
+      } else if (this.x - 1 == x && this.y + 1 == y && fichaAntigua && fichaAntigua.blanco) {
+        // comer a la derecha
+        return true
+      } else if (this.x - 1 == x && this.y - 1 == y && fichaAntigua && fichaAntigua.blanco) {
+        // comer a la izquierda
+        return true
+      }
+    }
+    return false
   }
 }

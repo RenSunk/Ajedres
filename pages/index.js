@@ -13,26 +13,26 @@ export default function Home() {
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
-  const [peonesBlancos, setPeonesBlancos] = useState([
-    new Peon(0, 0, true),
-    new Peon(0, 1, true),
-    new Peon(0, 2, true),
-    new Peon(0, 3, true),
-    new Peon(0, 4, true),
-    new Peon(0, 5, true),
-    new Peon(0, 6, true),
-    new Peon(0, 7, true),
+  const [peonesBlancos] = useState([
+    new Peon(1, 0, true),
+    new Peon(1, 1, true),
+    new Peon(1, 2, true),
+    new Peon(1, 3, true),
+    new Peon(1, 4, true),
+    new Peon(1, 5, true),
+    new Peon(1, 6, true),
+    new Peon(1, 7, true),
   ]);
 
-  const [peonesNegros, setPeonesNegros] = useState([
-    new Peon(7, 0, false),
-    new Peon(7, 1, false),
-    new Peon(7, 2, false),
-    new Peon(7, 3, false),
-    new Peon(7, 4, false),
-    new Peon(7, 5, false),
-    new Peon(7, 6, false),
-    new Peon(7, 7, false),
+  const [peonesNegros] = useState([
+    new Peon(6, 0, false),
+    new Peon(6, 1, false),
+    new Peon(6, 2, false),
+    new Peon(6, 3, false),
+    new Peon(6, 4, false),
+    new Peon(6, 5, false),
+    new Peon(6, 6, false),
+    new Peon(6, 7, false),
   ]);
 
   const [celdaSelecionada, setCeldaSelecionada] = useState();
@@ -65,6 +65,8 @@ export default function Home() {
           )
         ) {
           reAjustarCeldas();
+        } else {
+          //alert("Movimiento no permitido");
         }
         setCeldaSelecionada();
         setNuevaCeldaSelecionada({});
@@ -103,6 +105,53 @@ export default function Home() {
       });
       return items;
     });
+  };
+
+  const handleDragStart = (event, fila, numeroFila, numeroColumna) => {
+    event.dataTransfer.setData(
+      "text/plain",
+      JSON.stringify({ fila, numeroFila, numeroColumna })
+    );
+    setCeldaSelecionada(fila);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event, numeroFila, numeroColumna) => {
+    event.preventDefault();
+    const data = JSON.parse(event.dataTransfer.getData("text/plain"));
+    moverFicha(
+      celdas[data.numeroColumna][data.numeroFila],
+      numeroFila,
+      numeroColumna
+    );
+  };
+
+  const configurarColor = (fila, numeroColumna, numeroFila) => {
+    if (celdaSelecionada && celdaSelecionada === fila) {
+      return "green";
+    }
+
+    if (celdaSelecionada) {
+      if (
+        celdaSelecionada.movimientoPermitidos(
+          numeroColumna,
+          numeroFila,
+          celdas[numeroColumna][numeroFila]
+        )
+      ) {
+        if (celdas[numeroColumna][numeroFila]) {
+          return "red";
+        }
+        return "blue";
+      }
+    }
+    if (numeroFila % 2 === numeroColumna % 2) {
+      return "url('casillanegra.png')";
+    }
+    return "";
   };
 
   return (
@@ -156,52 +205,60 @@ export default function Home() {
           }}
         >
           <tbody>
-            {celdas.map((columna, numeroColumna) => {
-              return (
-                <tr key={numeroColumna}>
-                  {columna.map((fila, numeroFila) => {
-                    return (
-                      <td
-                        key={numeroFila}
-                        style={{
-                          backgroundImage:
-                            numeroFila % 2 == numeroColumna % 2
-                              ? "url('/casillanegra.png')"
-                              : "",
-                          width: "60px",
-                          height: "60px",
-                        }}
-                      >
-                        {}
-                        <a
-                          onClick={() => {
-                            moverFicha(fila, numeroFila, numeroColumna);
-                          }}
-                          style={{
-                            backgroundColor:
-                              celdaSelecionada && celdaSelecionada == fila
-                                ? "green"
-                                : nuevaCeldaSelecionada.x == numeroColumna &&
-                                  nuevaCeldaSelecionada.y == numeroFila
-                                ? "red"
-                                : "",
-                            display: "block",
-                            width: "100%",
-                            height: "100%",
-                          }}
-                        >
-                          {fila ? (
-                            fila.vivo ? (
-                              <img src={fila.imagen} alt="Peon" />
-                            ) : null
-                          ) : null}
-                        </a>
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {celdas.map((columna, numeroColumna) => (
+              <tr key={numeroColumna}>
+                {columna.map((fila, numeroFila) => (
+                  <td
+                    key={numeroFila}
+                    style={{
+                      background: configurarColor(
+                        fila,
+                        numeroColumna,
+                        numeroFila
+                      ),
+                      width: "70px",
+                      minWidth: "70px",
+                      height: "70px",
+                    }}
+                    onDragOver={handleDragOver}
+                    onDrop={(event) =>
+                      handleDrop(event, numeroFila, numeroColumna)
+                    }
+                  >
+                    <a
+                      draggable
+                      onDragStart={(event) =>
+                        handleDragStart(event, fila, numeroFila, numeroColumna)
+                      }
+                      onClick={() =>
+                        moverFicha(fila, numeroFila, numeroColumna)
+                      }
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    >
+                      {fila ? (
+                        fila.vivo ? (
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              width: "100%",
+                              height: "100%",
+                            }}
+                          >
+                            <img src={fila.imagen} alt="Peon" />
+                          </div>
+                        ) : null
+                      ) : null}
+                    </a>
+                  </td>
+                ))}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
