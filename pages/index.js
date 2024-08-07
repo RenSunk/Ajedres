@@ -89,12 +89,7 @@ export default function Home() {
       if (fila.vivo) {
         setCeldaSelecionada(fila);
         setMovimientosPermitidos(
-          fila.movimientoPermitidos(
-            numeroColumna,
-            numeroFila,
-            undefined,
-            celdas
-          )
+          fila.movimientoPermitidos(celdas)
         );
       }
     }
@@ -151,11 +146,13 @@ export default function Home() {
       "text/plain",
       JSON.stringify({ fila, numeroFila, numeroColumna })
     );
-    if (fila.vivo) {
-      setCeldaSelecionada(fila);
-      setMovimientosPermitidos(
-        fila.movimientoPermitidos(numeroColumna, numeroFila, undefined, celdas)
-      );
+    if(fila){
+      if (fila.vivo) {
+        setCeldaSelecionada(fila);
+        setMovimientosPermitidos(
+          fila.movimientoPermitidos(celdas)
+        );
+      }
     }
   };
 

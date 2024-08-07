@@ -17,12 +17,12 @@ export class Peon {
     this.primermovimiento = true;
   }
 
-  mover(x, y, fichaAntigua) {
+  mover(x, y, fichaAntigua, tablero) {
     if (this.vivo) {
-      if(this.movimientoPermitidos(x, y, fichaAntigua)){
+      if (this.movimientoPermitidos(tablero).find((movimiento) => movimiento.x === x && movimiento.y === y)){
         return this.aplicarMovimiento(x, y, fichaAntigua);
       }
-    }
+  }
     return false;
   }
 
@@ -44,36 +44,69 @@ export class Peon {
     return true;
   }
 
-  movimientoPermitidos(x, y, fichaAntigua){
+  movimientoPermitidos(tablero){
+    let movimientosPermitidos=[]
     if (this.blanco) {
-      if (this.x + 2 == x && this.y == y && this.primermovimiento) {
+      if (this.primermovimiento && !tablero[this.x + 1][this.y] && !tablero[this.x + 2][this.y]) { 
         // movimiento de dos casillas
-        return true
-      } else if (this.x + 1 == x && this.y == y && !fichaAntigua) {
-        // movimiento de una casilla
-        return true
-      } else if (this.x + 1 == x && this.y - 1 == y && fichaAntigua && !fichaAntigua.blanco) {
-        // movimiento a la izquierda
-        return true
-      } else if (this.x + 1 == x && this.y + 1 == y && fichaAntigua && !fichaAntigua.blanco) {
-        // movimiento a la derecha
-        return true
+        movimientosPermitidos.push({
+          x: this.x+2,
+          y: this.y,
+        });
       }
+      if (!tablero[this.x + 1][this.y] ) {
+        // movimiento de una casilla
+        movimientosPermitidos.push({
+          x: this.x+1,
+          y: this.y,
+        });
+      }
+      if (tablero[this.x + 1][this.y+1] && !tablero[this.x + 1][this.y+1].blanco) {
+        // movimiento a la derecha
+        movimientosPermitidos.push({
+          x: this.x+1,
+          y: this.y+1,
+        });
+      }
+      if (tablero[this.x + 1][this.y-1] && !tablero[this.x + 1][this.y-1].blanco) {
+        // movimiento a la izquierda
+        movimientosPermitidos.push({
+          x: this.x+1,
+          y: this.y-1,
+        });
+      }
+
     } else {
-      if (this.x - 2 == x && this.y == y && this.primermovimiento) {
+      if (this.primermovimiento && !tablero[this.x - 1][this.y] && !tablero[this.x - 2][this.y]) { 
         // movimiento de dos casillas
-        return true
-      } else if (this.x - 1 == x && this.y == y && !fichaAntigua) {
-        // movimeinto de una casilla
-        return true
-      } else if (this.x - 1 == x && this.y + 1 == y && fichaAntigua && fichaAntigua.blanco) {
-        // comer a la derecha
-        return true
-      } else if (this.x - 1 == x && this.y - 1 == y && fichaAntigua && fichaAntigua.blanco) {
-        // comer a la izquierda
-        return true
+        movimientosPermitidos.push({
+          x: this.x-2,
+          y: this.y,
+        });
+      }
+      if (!tablero[this.x - 1][this.y] ) {
+        // movimiento de una casilla
+        movimientosPermitidos.push({
+          x: this.x-1,
+          y: this.y,
+        });
+      }
+      if (tablero[this.x - 1][this.y+1] && tablero[this.x - 1][this.y+1].blanco) {
+        // movimiento a la derecha
+        movimientosPermitidos.push({
+          x: this.x-1,
+          y: this.y+1,
+        });
+      }
+      if (tablero[this.x - 1][this.y-1] && tablero[this.x - 1][this.y-1].blanco) {
+        // movimiento a la izquierda
+        movimientosPermitidos.push({
+          x: this.x-1,
+          y: this.y-1,
+        });
       }
     }
-    return false
+    console.log(movimientosPermitidos)
+    return movimientosPermitidos
   }
 }

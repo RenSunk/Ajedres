@@ -15,7 +15,7 @@ export class Torre {
 
   mover(x, y, fichaAntigua, tablero) {
     if (this.vivo) {
-      if (this.movimientoPermitidos(x, y, fichaAntigua, tablero).find((movimiento) => movimiento.x === x && movimiento.y === y)){
+      if (this.movimientoPermitidos(tablero).find((movimiento) => movimiento.x === x && movimiento.y === y)){
         return this.aplicarMovimiento(x, y, fichaAntigua);
       }
     }
@@ -38,7 +38,7 @@ export class Torre {
     return true;
   }
 
-  movimientoPermitidos(x, y, fichaAntigua, tablero) {
+  movimientoPermitidos(tablero) {
     let movimientosPermitidos = [];
     for (let i = this.x + 1; i < tablero.length; i++) {
       movimientosPermitidos.push({
@@ -101,6 +101,7 @@ export class Torre {
         break;
       }
     }
+    console.log(movimientosPermitidos)
     return movimientosPermitidos;
   }
 }
