@@ -201,7 +201,7 @@ export default function Home() {
         }}
       >
         <h1>Tablero de Ajedrez</h1>
-        <h3> Versión Alfa 1.01 </h3>
+        <h3> Versión Alfa 1.02 </h3>
       </div>
       <div style={{ display: "flex" }}>
         <div>
