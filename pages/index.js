@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Peon } from "../objetos/peon";
+import { Torre } from "../objetos/torre";
 
 export default function Home() {
   const [celdas, setCeldas] = useState([
@@ -27,16 +28,28 @@ export default function Home() {
   const [peonesNegros] = useState([
     new Peon(6, 0, false),
     new Peon(6, 1, false),
-    new Peon(6, 2, false),
+    new Peon(5, 2, false),
     new Peon(6, 3, false),
     new Peon(6, 4, false),
     new Peon(6, 5, false),
-    new Peon(6, 6, false),
+    new Peon(5, 6, false),
     new Peon(6, 7, false),
+  ]);
+
+  const [torresBlancas] = useState([
+    new Torre(5, 5, true),
+    new Torre(0, 7, true),
+  ]);
+
+  const [torresNegras] = useState([
+    new Torre(7, 0, false),
+    new Torre(7, 7, false),
   ]);
 
   const [celdaSelecionada, setCeldaSelecionada] = useState();
   const [nuevaCeldaSelecionada, setNuevaCeldaSelecionada] = useState({});
+
+  const [movimientosPermitidos, setMovimientosPermitidos] = useState([]);
 
   const moverFicha = (fila, numeroFila, numeroColumna) => {
     if (celdaSelecionada) {
@@ -61,7 +74,8 @@ export default function Home() {
           celdas[antiguaPosicionX][antiguaPosicionY].mover(
             nuevaPosicionX,
             nuevaPosicionY,
-            fichaAntigua
+            fichaAntigua,
+            celdas
           )
         ) {
           reAjustarCeldas();
@@ -72,7 +86,17 @@ export default function Home() {
         setNuevaCeldaSelecionada({});
       }
     } else if (fila && nuevaCeldaSelecionada.leghth != 0) {
-      fila.vivo && setCeldaSelecionada(fila);
+      if (fila.vivo) {
+        setCeldaSelecionada(fila);
+        setMovimientosPermitidos(
+          fila.movimientoPermitidos(
+            numeroColumna,
+            numeroFila,
+            undefined,
+            celdas
+          )
+        );
+      }
     }
   };
 
@@ -97,9 +121,24 @@ export default function Home() {
           let peonNegro = peonesNegros.find(
             ({ x, y }) => x == numeroColumna && y == numeroFila
           );
-
           if (peonNegro) {
             return peonNegro;
+          }
+
+          let torreBlanca = torresBlancas.find(
+            ({ x, y }) => x == numeroColumna && y == numeroFila
+          );
+
+          if (torreBlanca) {
+            return torreBlanca;
+          }
+
+          let torreNegra = torresNegras.find(
+            ({ x, y }) => x == numeroColumna && y == numeroFila
+          );
+
+          if (torreNegra) {
+            return torreNegra;
           }
         });
       });
@@ -112,7 +151,12 @@ export default function Home() {
       "text/plain",
       JSON.stringify({ fila, numeroFila, numeroColumna })
     );
-    setCeldaSelecionada(fila);
+    if (fila.vivo) {
+      setCeldaSelecionada(fila);
+      setMovimientosPermitidos(
+        fila.movimientoPermitidos(numeroColumna, numeroFila, undefined, celdas)
+      );
+    }
   };
 
   const handleDragOver = (event) => {
@@ -130,19 +174,14 @@ export default function Home() {
   };
 
   const configurarColor = (fila, numeroColumna, numeroFila) => {
+    
     if (celdaSelecionada && celdaSelecionada === fila) {
       return "green";
     }
 
     if (celdaSelecionada) {
-      if (
-        celdaSelecionada.movimientoPermitidos(
-          numeroColumna,
-          numeroFila,
-          celdas[numeroColumna][numeroFila]
-        )
-      ) {
-        if (celdas[numeroColumna][numeroFila]) {
+      if (movimientosPermitidos.find((movimiento) => movimiento.x === numeroColumna && movimiento.y === numeroFila)){
+        if(celdas[numeroColumna][numeroFila]){
           return "red";
         }
         return "blue";
@@ -151,6 +190,7 @@ export default function Home() {
     if (numeroFila % 2 === numeroColumna % 2) {
       return "url('casillanegra.png')";
     }
+
     return "";
   };
 
