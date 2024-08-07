@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Peon } from "../objetos/peon";
 import { Torre } from "../objetos/torre";
 import { Arfil } from "../objetos/arfil";
+import { Reina } from "../objetos/reina";
 
 export default function Home() {
   const [celdas, setCeldas] = useState([
@@ -55,6 +56,13 @@ export default function Home() {
   const [arfilesNegros] = useState([
     new Arfil(7, 2, false),
     new Arfil(7, 5, false),
+  ]);
+
+  const [reinasBlancas] = useState([
+    new Reina(0, 3, true),
+  ]);
+  const [reinasNegras] = useState([
+    new Reina(7, 3, false),
   ]);
 
   const [celdaSelecionada, setCeldaSelecionada] = useState();
@@ -160,6 +168,23 @@ export default function Home() {
           if (arfilNegro) {
             return arfilNegro;
           }
+
+          let reinaBlanca = reinasBlancas.find(
+            ({ x, y }) => x == numeroColumna && y == numeroFila
+          );
+
+          if (reinaBlanca) {
+            return reinaBlanca;
+          }
+
+          let reinaNegra = reinasNegras.find(
+            ({ x, y }) => x == numeroColumna && y == numeroFila
+          );
+
+          if (reinaNegra) {
+            return reinaNegra;
+          }
+
         });
       });
       return items;

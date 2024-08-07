@@ -101,7 +101,7 @@ export class Torre {
         break;
       }
     }
-    console.log(movimientosPermitidos)
+
     return movimientosPermitidos;
   }
 }
