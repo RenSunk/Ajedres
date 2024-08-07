@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Peon } from "../objetos/peon";
 import { Torre } from "../objetos/torre";
+import { Arfil } from "../objetos/arfil";
 
 export default function Home() {
   const [celdas, setCeldas] = useState([
@@ -28,22 +29,32 @@ export default function Home() {
   const [peonesNegros] = useState([
     new Peon(6, 0, false),
     new Peon(6, 1, false),
-    new Peon(5, 2, false),
+    new Peon(6, 2, false),
     new Peon(6, 3, false),
     new Peon(6, 4, false),
     new Peon(6, 5, false),
-    new Peon(5, 6, false),
+    new Peon(6, 6, false),
     new Peon(6, 7, false),
   ]);
 
   const [torresBlancas] = useState([
-    new Torre(5, 5, true),
+    new Torre(0, 0, true),
     new Torre(0, 7, true),
   ]);
 
   const [torresNegras] = useState([
     new Torre(7, 0, false),
     new Torre(7, 7, false),
+  ]);
+
+  const [arfilesBlancos] = useState([
+    new Arfil(0, 2, true),
+    new Arfil(0, 5, true),
+  ]);
+
+  const [arfilesNegros] = useState([
+    new Arfil(7, 2, false),
+    new Arfil(7, 5, false),
   ]);
 
   const [celdaSelecionada, setCeldaSelecionada] = useState();
@@ -88,9 +99,7 @@ export default function Home() {
     } else if (fila && nuevaCeldaSelecionada.leghth != 0) {
       if (fila.vivo) {
         setCeldaSelecionada(fila);
-        setMovimientosPermitidos(
-          fila.movimientoPermitidos(celdas)
-        );
+        setMovimientosPermitidos(fila.movimientoPermitidos(celdas));
       }
     }
   };
@@ -135,6 +144,22 @@ export default function Home() {
           if (torreNegra) {
             return torreNegra;
           }
+
+          let arfilBlanco = arfilesBlancos.find(
+            ({ x, y }) => x == numeroColumna && y == numeroFila
+          );
+
+          if (arfilBlanco) {
+            return arfilBlanco;
+          }
+
+          let arfilNegro = arfilesNegros.find(
+            ({ x, y }) => x == numeroColumna && y == numeroFila
+          );
+
+          if (arfilNegro) {
+            return arfilNegro;
+          }
         });
       });
       return items;
@@ -146,12 +171,10 @@ export default function Home() {
       "text/plain",
       JSON.stringify({ fila, numeroFila, numeroColumna })
     );
-    if(fila){
+    if (fila) {
       if (fila.vivo) {
         setCeldaSelecionada(fila);
-        setMovimientosPermitidos(
-          fila.movimientoPermitidos(celdas)
-        );
+        setMovimientosPermitidos(fila.movimientoPermitidos(celdas));
       }
     }
   };
@@ -171,14 +194,18 @@ export default function Home() {
   };
 
   const configurarColor = (fila, numeroColumna, numeroFila) => {
-    
     if (celdaSelecionada && celdaSelecionada === fila) {
       return "green";
     }
 
     if (celdaSelecionada) {
-      if (movimientosPermitidos.find((movimiento) => movimiento.x === numeroColumna && movimiento.y === numeroFila)){
-        if(celdas[numeroColumna][numeroFila]){
+      if (
+        movimientosPermitidos.find(
+          (movimiento) =>
+            movimiento.x === numeroColumna && movimiento.y === numeroFila
+        )
+      ) {
+        if (celdas[numeroColumna][numeroFila]) {
           return "red";
         }
         return "blue";
