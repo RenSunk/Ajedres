@@ -3,6 +3,8 @@ import { Peon } from "../objetos/peon";
 import { Torre } from "../objetos/torre";
 import { Arfil } from "../objetos/arfil";
 import { Reina } from "../objetos/reina";
+import { Rey } from "../objetos/rey";
+import { PanelFichas } from "../componentes/panelFichas";
 
 export default function Home() {
   const [celdas, setCeldas] = useState([
@@ -58,12 +60,13 @@ export default function Home() {
     new Arfil(7, 5, false),
   ]);
 
-  const [reinasBlancas] = useState([
-    new Reina(0, 3, true),
-  ]);
-  const [reinasNegras] = useState([
-    new Reina(7, 3, false),
-  ]);
+  const [reinasBlancas] = useState([new Reina(0, 3, true)]);
+
+  const [reinasNegras] = useState([new Reina(7, 3, false)]);
+
+  const [reyBlanco] = useState([new Rey(0, 4, true)]);
+
+  const [reyNegro] = useState([new Rey(7, 4, false)]);
 
   const [celdaSelecionada, setCeldaSelecionada] = useState();
   const [nuevaCeldaSelecionada, setNuevaCeldaSelecionada] = useState({});
@@ -103,6 +106,7 @@ export default function Home() {
         }
         setCeldaSelecionada();
         setNuevaCeldaSelecionada({});
+        setMovimientosPermitidos([]);
       }
     } else if (fila && nuevaCeldaSelecionada.leghth != 0) {
       if (fila.vivo) {
@@ -185,6 +189,21 @@ export default function Home() {
             return reinaNegra;
           }
 
+          let reyblanco = reyBlanco.find(
+            ({ x, y }) => x == numeroColumna && y == numeroFila
+          );
+
+          if (reyblanco) {
+            return reyblanco;
+          }
+
+          let reynegro = reyNegro.find(
+            ({ x, y }) => x == numeroColumna && y == numeroFila
+          );
+
+          if (reynegro) {
+            return reynegro;
+          }
         });
       });
       return items;
@@ -220,7 +239,7 @@ export default function Home() {
 
   const configurarColor = (fila, numeroColumna, numeroFila) => {
     if (celdaSelecionada && celdaSelecionada === fila) {
-      return "green";
+      return "#3dec5d ";
     }
 
     if (celdaSelecionada) {
@@ -231,9 +250,9 @@ export default function Home() {
         )
       ) {
         if (celdas[numeroColumna][numeroFila]) {
-          return "red";
+          return "#e74343 ";
         }
-        return "blue";
+        return "u";
       }
     }
     if (numeroFila % 2 === numeroColumna % 2) {
@@ -253,38 +272,22 @@ export default function Home() {
         }}
       >
         <h1>Tablero de Ajedrez</h1>
-        <h3> Versión Alfa 1.02 </h3>
+        <h3> Versión Alfa 1.05 </h3>
       </div>
-      <div style={{ display: "flex" }}>
-        <div>
-          <h1>Peones</h1>
-          <p>
-            Para mover un peón, seleccione el peón que desea mover y luego
-            seleccione la casilla a la que desea moverlo.
-          </p>
+      <div style={{ display: "flex", width: "80%" }}>
 
-          <h2>Peones Blancos</h2>
-          <ul>
-            {peonesBlancos.map((peon, index) => {
-              return (
-                <li key={index} style={{ color: peon.vivo ? "green" : "red" }}>
-                  {peon.vivo ? peon.x + "," + peon.y : "MUERTO"}
-                </li>
-              );
-            })}
-          </ul>
-
-          <h2>Peones Negros</h2>
-          <ul>
-            {peonesNegros.map((peon, index) => {
-              return (
-                <li key={index} style={{ color: peon.vivo ? "green" : "red" }}>
-                  {peon.vivo ? peon.x + "," + peon.y : "MUERTO"}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+        <PanelFichas
+          arfilesBlancos={arfilesBlancos}
+          peonesBlancos={peonesBlancos}
+          reinasBlancas={reinasBlancas}
+          reyBlanco={reyBlanco}
+          torresBlancas={torresBlancas}
+          arfilesNegros={arfilesNegros}
+          peonesNegros={peonesNegros}
+          reinasNegras={reinasNegras}
+          reyNegro={reyNegro}
+          torresNegras={torresNegras}
+        />
 
         <table
           style={{
@@ -328,21 +331,38 @@ export default function Home() {
                         height: "100%",
                       }}
                     >
-                      {fila ? (
-                        fila.vivo ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          width: "100%",
+                          height: "100%",
+                        }}
+                      >
+                        {movimientosPermitidos.find(
+                          (movimiento) =>
+                            movimiento.x === numeroColumna &&
+                            movimiento.y === numeroFila
+                        ) && !fila ? (
                           <div
                             style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              width: "100%",
-                              height: "100%",
+                              border: "8px solid #bcbebd",
+                              width: "0px",
+                              height: "0px",
+                              borderRadius: "50%",
                             }}
-                          >
-                            <img src={fila.imagen} alt="Peon" />
-                          </div>
-                        ) : null
-                      ) : null}
+                          ></div>
+                        ) : null}
+
+                        {fila ? (
+                          fila.vivo ? (
+                            <>
+                              <img src={fila.imagen} alt="Peon" />
+                            </>
+                          ) : null
+                        ) : null}
+                      </div>
                     </a>
                   </td>
                 ))}
