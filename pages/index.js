@@ -119,7 +119,18 @@ export default function Home() {
   useEffect(() => {
     // ajustar el estado de las celdas
     reAjustarCeldas();
-  }, []);
+  }, [
+    peonesBlancos,
+    peonesNegros,
+    torresBlancas,
+    torresNegras,
+    arfilesBlancos,
+    arfilesNegros,
+    reinasBlancas,
+    reinasNegras,
+    reyBlanco,
+    reyNegro,
+  ]);
 
   const reAjustarCeldas = () => {
     setCeldas((item) => {
@@ -256,7 +267,7 @@ export default function Home() {
       }
     }
     if (numeroFila % 2 === numeroColumna % 2) {
-      return "url('casillanegra.png')";
+      return "gray";
     }
 
     return "";
@@ -274,20 +285,9 @@ export default function Home() {
         <h1>Tablero de Ajedrez</h1>
         <h3> Versión Alfa 1.05 </h3>
       </div>
-      <div style={{ display: "flex", width: "80%" }}>
+      <div style={{ display: "flex" }}>
 
-        <PanelFichas
-          arfilesBlancos={arfilesBlancos}
-          peonesBlancos={peonesBlancos}
-          reinasBlancas={reinasBlancas}
-          reyBlanco={reyBlanco}
-          torresBlancas={torresBlancas}
-          arfilesNegros={arfilesNegros}
-          peonesNegros={peonesNegros}
-          reinasNegras={reinasNegras}
-          reyNegro={reyNegro}
-          torresNegras={torresNegras}
-        />
+
 
         <table
           style={{
@@ -370,6 +370,21 @@ export default function Home() {
             ))}
           </tbody>
         </table>
+        <div style={{ marginLeft: "20px", width: "30%" }}>
+        <PanelFichas
+          arfilesBlancos={arfilesBlancos}
+          peonesBlancos={peonesBlancos}
+          reinasBlancas={reinasBlancas}
+          reyBlanco={reyBlanco}
+          torresBlancas={torresBlancas}
+          arfilesNegros={arfilesNegros}
+          peonesNegros={peonesNegros}
+          reinasNegras={reinasNegras}
+          reyNegro={reyNegro}
+          torresNegras={torresNegras}
+        />
+        </div>
+
       </div>
     </div>
   );
