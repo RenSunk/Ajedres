@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Peon } from "../objetos/peon";
+import { Caballo } from "../objetos/caballo";
 import { Torre } from "../objetos/torre";
 import { Arfil } from "../objetos/arfil";
 import { Reina } from "../objetos/reina";
@@ -58,6 +59,16 @@ export default function Home() {
   const [arfilesNegros] = useState([
     new Arfil(7, 2, false),
     new Arfil(7, 5, false),
+  ]);
+
+  const [caballosBlancos] = useState([
+    new Caballo(0, 1, true),
+    new Caballo(0, 6, true),
+  ]);
+
+  const [caballosNegros] = useState([
+    new Caballo(7, 1, false),
+    new Caballo(7, 6, false),
   ]);
 
   const [reinasBlancas] = useState([new Reina(0, 3, true)]);
@@ -183,6 +194,21 @@ export default function Home() {
           if (arfilNegro) {
             return arfilNegro;
           }
+          let caballoBlanco = caballosBlancos.find(
+            ({ x, y }) => x == numeroColumna && y == numeroFila
+          );
+
+          if (caballoBlanco) {
+            return caballoBlanco;
+          }
+
+          let caballoNegro = caballosNegros.find(
+            ({ x, y }) => x == numeroColumna && y == numeroFila
+          );
+
+          if (caballoNegro) {
+            return caballoNegro;
+          }
 
           let reinaBlanca = reinasBlancas.find(
             ({ x, y }) => x == numeroColumna && y == numeroFila
@@ -288,7 +314,6 @@ export default function Home() {
       <div style={{ display: "flex" }}>
 
 
-
         <table
           style={{
             borderCollapse: "collapse",
@@ -375,9 +400,11 @@ export default function Home() {
           arfilesBlancos={arfilesBlancos}
           peonesBlancos={peonesBlancos}
           reinasBlancas={reinasBlancas}
+          caballosBlancos={caballosBlancos}
           reyBlanco={reyBlanco}
           torresBlancas={torresBlancas}
           arfilesNegros={arfilesNegros}
+          caballosNegros={caballosNegros}
           peonesNegros={peonesNegros}
           reinasNegras={reinasNegras}
           reyNegro={reyNegro}
