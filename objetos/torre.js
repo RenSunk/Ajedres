@@ -14,11 +14,11 @@ export class Torre {
   }
 
   mover(x, y, fichaAntigua, tablero) {
-    if (this.vivo) {
-      if (this.movimientoPermitidos(tablero).find((movimiento) => movimiento.x === x && movimiento.y === y)){
-        return this.aplicarMovimiento(x, y, fichaAntigua);
-      }
+    if (tablero[x][y] === undefined) {
+      return;
     }
+    if (!this.vivo || !this.esMovimientoValido(x, y, tablero)) return;
+    return this.aplicarMovimiento(x, y, fichaAntigua);
   }
 
   aplicarMovimiento(x, y, fichaAntigua) {
@@ -38,70 +38,34 @@ export class Torre {
     return true;
   }
 
+  esMovimientoValido(x, y, tablero) {
+    return this.movimientoPermitidos(tablero).some(
+      (mov) => mov.x === x && mov.y === y
+    );
+  }
+
   movimientoPermitidos(tablero) {
+    let direcciones = [
+      { dx: 1, dy: 0 },
+      { dx: -1, dy: 0 },
+      { dx: 0, dy: 1 },
+      { dx: 0, dy: -1 },
+    ];
     let movimientosPermitidos = [];
-    for (let i = this.x + 1; i < tablero.length; i++) {
-      movimientosPermitidos.push({
-        x: i,
-        y: this.y,
-      });
-
-      if (tablero[i][this.y]) {
-        if(this.blanco == tablero[i][this.y].blanco){
-          movimientosPermitidos.pop();
-          break
+    for (let { dx, dy } of direcciones) {
+      let x = this.x + dx;
+      let y = this.y + dy;
+      while (x >= 0 && y >= 0 && x < tablero.length && y < tablero.length) {
+        if (tablero[x][y]) {
+          if (tablero[x][y].blanco !== this.blanco)
+            movimientosPermitidos.push({ x, y });
+          break;
         }
-        break;
+        movimientosPermitidos.push({ x, y });
+        x += dx;
+        y += dy;
       }
     }
-
-    for (let i = this.x - 1; i >= 0; i--) {
-      movimientosPermitidos.push({
-        x: i,
-        y: this.y,
-      });
-
-      if (tablero[i][this.y]) {
-
-        if(this.blanco == tablero[i][this.y].blanco){
-          movimientosPermitidos.pop();
-          break
-        }
-        break;
-      }
-    }
-
-    for (let i = this.y + 1; i < tablero.length; i++) {
-      movimientosPermitidos.push({
-        x: this.x,
-        y: i,
-      });
-
-      if (tablero[this.x][i]) {
-        if(this.blanco == tablero[this.x][i].blanco){
-          movimientosPermitidos.pop();
-          break
-        }
-        break;
-      }
-    }
-
-    for (let i = this.y - 1; i >= 0; i--) {
-      movimientosPermitidos.push({
-        x: this.x,
-        y: i,
-      });
-
-
-      if (tablero[this.x][i]) {
-        if(this.blanco == tablero[this.x][i].blanco){
-          movimientosPermitidos.pop();
-          break
-        }
-        break;
-      }
-    }
-
     return movimientosPermitidos;
   }
 }

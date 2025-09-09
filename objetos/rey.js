@@ -8,138 +8,41 @@ export class Rey {
     this.y = y;
     this.vivo = true;
     this.imagen = blanco ? SRC_REY_BLANCO : SRC_REY_NEGRO;
-
-    this.mover = this.mover.bind(this);
   }
 
   mover(x, y, fichaAntigua, tablero) {
-    if (this.vivo) {
-      if (
-        this.movimientoPermitidos(tablero).find(
-          (movimiento) => movimiento.x === x && movimiento.y === y
-        )
-      ) {
-        return this.aplicarMovimiento(x, y, fichaAntigua);
-      }
-    }
+    if (!this.vivo || !this.esMovimientoValido(x, y, tablero)) return;
+    return this.aplicarMovimiento(x, y, fichaAntigua);
   }
 
   aplicarMovimiento(x, y, fichaAntigua) {
     this.x = x;
     this.y = y;
-    if (fichaAntigua) {
-      if (fichaAntigua.blanco && !this.blanco) {
-        fichaAntigua.vivo = false;
-        fichaAntigua.x = -1;
-        fichaAntigua.y = -1;
-      } else if (!fichaAntigua.blanco && this.blanco) {
-        fichaAntigua.vivo = false;
-        fichaAntigua.x = -1;
-        fichaAntigua.y = -1;
-      }
+    if (fichaAntigua && fichaAntigua.blanco !== this.blanco) {
+      fichaAntigua.vivo = false;
+      fichaAntigua.x = -1;
+      fichaAntigua.y = -1;
     }
     return true;
   }
 
+  esMovimientoValido(x, y, tablero) {
+    return this.movimientoPermitidos(tablero).some(mov => mov.x === x && mov.y === y);
+  }
+
   movimientoPermitidos(tablero) {
-    let movimientosPermitidos = [];
+    const direcciones = [
+      { dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 },
+      { dx: 1, dy: 1 }, { dx: -1, dy: -1 }, { dx: 1, dy: -1 }, { dx: -1, dy: 1 }
+    ];
 
-    movimientosPermitidos.push({
-      x: this.x + 1,
-      y: this.y,
-    });
-    if (this.x + 1 < tablero.length) {
-      if (tablero[this.x + 1][this.y]) {
-        if (tablero[this.x + 1][this.y].blanco == this.blanco) {
-          movimientosPermitidos.pop();
-        }
-      }
-    }
+    return direcciones
+      .map(({ dx, dy }) => ({ x: this.x + dx, y: this.y + dy }))
+      .filter(({ x, y }) => this.esPosicionValida(x, y, tablero));
+  }
 
-    movimientosPermitidos.push({
-      x: this.x - 1,
-      y: this.y,
-    });
-    if (this.x - 1 >= 0) {
-      if (tablero[this.x - 1][this.y]) {
-        if (tablero[this.x - 1][this.y].blanco == this.blanco) {
-          movimientosPermitidos.pop();
-        }
-      }
-    }
-
-    movimientosPermitidos.push({
-      x: this.x,
-      y: this.y + 1,
-    });
-    if (this.y + 1 < tablero.length) {
-      if (tablero[this.x][this.y + 1]) {
-        if (tablero[this.x][this.y + 1].blanco == this.blanco) {
-          movimientosPermitidos.pop();
-        }
-      }
-    }
-
-    movimientosPermitidos.push({
-      x: this.x,
-      y: this.y - 1,
-    });
-    if (this.y - 1 >= 0) {
-      if (tablero[this.x][this.y - 1]) {
-        if (tablero[this.x][this.y - 1].blanco == this.blanco) {
-          movimientosPermitidos.pop();
-        }
-      }
-    }
-    movimientosPermitidos.push({
-      x: this.x + 1,
-      y: this.y + 1,
-    });
-
-    if (this.x + 1 < tablero.length && this.y + 1 < tablero.length) {
-      if (tablero[this.x + 1][this.y + 1]) {
-        if (tablero[this.x + 1][this.y + 1].blanco == this.blanco) {
-          movimientosPermitidos.pop();
-        }
-      }
-    }
-
-    movimientosPermitidos.push({
-      x: this.x - 1,
-      y: this.y - 1,
-    });
-    if (this.x - 1 >= 0 && this.y - 1 >= 0) {
-      if (tablero[this.x - 1][this.y - 1]) {
-        if (tablero[this.x - 1][this.y - 1].blanco == this.blanco) {
-          movimientosPermitidos.pop();
-        }
-      }
-    }
-
-    movimientosPermitidos.push({
-      x: this.x + 1,
-      y: this.y - 1,
-    });
-    if (this.x + 1 < tablero.length && this.y - 1 >= 0) {
-      if (tablero[this.x + 1][this.y - 1]) {
-        if (tablero[this.x + 1][this.y - 1].blanco == this.blanco) {
-          movimientosPermitidos.pop();
-        }
-      }
-    }
-
-    movimientosPermitidos.push({
-      x: this.x - 1,
-      y: this.y + 1,
-    });
-    if (this.x - 1 >= 0 && this.y + 1 < tablero.length) {
-      if (tablero[this.x - 1][this.y + 1]) {
-        if (tablero[this.x - 1][this.y + 1].blanco == this.blanco) {
-          movimientosPermitidos.pop();
-        }
-      }
-    }
-
-    return movimientosPermitidos;
+  esPosicionValida(x, y, tablero) {
+    return x >= 0 && y >= 0 && x < tablero.length && y < tablero.length &&
+      (!tablero[x][y] || tablero[x][y].blanco !== this.blanco);
   }
 }

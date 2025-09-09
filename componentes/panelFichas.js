@@ -14,7 +14,7 @@ export const PanelFichas = ({
     <div>
       <h2>Fichas blancas:</h2>
       <div style={{ display: "flex", flexWrap: "wrap", width: "90%" }}>
-        {peonesBlancos.map((peon, index) => {
+        {peonesBlancos?.map((peon, index) => {
           return (
             !peon.vivo && (
               <div key={index}>
@@ -23,7 +23,7 @@ export const PanelFichas = ({
             )
           );
         })}
-        {torresBlancas.map((torre, index) => {
+        {torresBlancas?.map((torre, index) => {
           return (
             !torre.vivo && (
               <div key={index}>
@@ -32,7 +32,7 @@ export const PanelFichas = ({
             )
           );
         })}
-        {arfilesBlancos.map((arfil, index) => {
+        {arfilesBlancos?.map((arfil, index) => {
           return (
             !arfil.vivo && (
               <div key={index}>
@@ -41,7 +41,7 @@ export const PanelFichas = ({
             )
           );
         })}
-        {reinasBlancas.map((reina, index) => {
+        {reinasBlancas?.map((reina, index) => {
           return (
             !reina.vivo && (
               <div key={index}>
@@ -50,7 +50,7 @@ export const PanelFichas = ({
             )
           );
         })}
-        {reyBlanco.map((rey, index) => {
+        {reyBlanco?.map((rey, index) => {
           return (
             !rey.vivo && (
               <div key={index}>
@@ -62,7 +62,7 @@ export const PanelFichas = ({
       </div>
       <h2>Fichas negras:</h2>
       <div style={{ display: "flex", flexWrap: "wrap", width: "90%" }}>
-        {peonesNegros.map((peon, index) => {
+        {peonesNegros?.map((peon, index) => {
           return (
             !peon.vivo && (
               <div key={index}>
@@ -71,7 +71,7 @@ export const PanelFichas = ({
             )
           );
         })}
-        {torresNegras.map((torre, index) => {
+        {torresNegras?.map((torre, index) => {
           return (
             !torre.vivo && (
               <div key={index}>
@@ -80,7 +80,7 @@ export const PanelFichas = ({
             )
           );
         })}
-        {arfilesNegros.map((arfil, index) => {
+        {arfilesNegros?.map((arfil, index) => {
           return (
             !arfil.vivo && (
               <div key={index}>
@@ -89,7 +89,7 @@ export const PanelFichas = ({
             )
           );
         })}
-        {reinasNegras.map((reina, index) => {
+        {reinasNegras?.map((reina, index) => {
           return (
             !reina.vivo && (
               <div key={index}>
@@ -98,7 +98,7 @@ export const PanelFichas = ({
             )
           );
         })}
-        {reyNegro.map((rey, index) => {
+        {reyNegro?.map((rey, index) => {
           return (
             !rey.vivo && (
               <div key={index}>

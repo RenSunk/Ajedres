@@ -11,6 +11,9 @@ export class Arfil{
         this.mover = this.mover.bind(this);
     }
     mover(x, y, fichaAntigua, tablero){
+        if(tablero[x][y] === undefined){
+            return 
+          }
         if (this.vivo) {
             if (this.movimientoPermitidos(tablero).find((movimiento) => movimiento.x === x && movimiento.y === y)){
                 return this.aplicarMovimiento(x, y, fichaAntigua);
