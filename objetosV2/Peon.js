@@ -36,7 +36,6 @@ class Peon extends Ficha {
   movimientoDosCasillas(casillas) {
     const movimientos = [];
     const direccion = this.color === "blanco" ? 1 : -1;
-
     if (
       this.primeraJugada &&
       casillas[this.x + 2 * direccion] &&
@@ -99,18 +98,19 @@ class Peon extends Ficha {
   }
 
   mover(newX, newY, tablero) {
-    this.primeraJugada = false;
     if (
       this.movimientoNormal(tablero.casillas)
         .concat(this.capturaDiagonal(tablero.casillas))
         .some(([x, y]) => x === newX && y === newY)
     ) {
+      this.primeraJugada = false;
       return super.mover(newX, newY, tablero);
     } else if (
       this.movimientoDosCasillas(tablero.casillas).some(
         ([x, y]) => x === newX && y === newY
       )
     ) {
+      this.primeraJugada = false;
       this.casillaDoble = true;
       return super.mover(newX, newY, tablero);
     } else if (
@@ -118,8 +118,11 @@ class Peon extends Ficha {
         ([x, y]) => x === newX && y === newY
       )
     ) {
+      this.primeraJugada = false;
+      tablero.casillas[tablero.historial[tablero.historial.length - 1].ficha.x][
+        tablero.historial[tablero.historial.length - 1].ficha.y
+      ] = null;
       tablero.historial[tablero.historial.length - 1].ficha.morir();
-
       return super.mover(newX, newY, tablero);
     }
     this.primeraJugada = true;
