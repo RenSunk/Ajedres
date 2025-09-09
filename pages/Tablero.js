@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Tablero from "../objetosV2/Tablero";
+import Image from "next/image";
 
 export default function TableroPage() {
   const [tableroView, setTableroView] = useState([]);
@@ -62,7 +63,7 @@ export default function TableroPage() {
         }
       }
     }
-    return <>{ficha?.vida && <img src={ficha.uri} alt={ficha.color} />}</>;
+    return <>{ficha?.vida && <Image width={50} height={50} src={ficha.uri} alt={ficha.color} />}</>;
   };
 
   return (
