@@ -171,7 +171,7 @@ export default function HomeV2() {
                     onClick={() => moverFicha(celda, x, y)}
                   >
                     {celda?.vivo ? (
-                      <img src={celda.imagen} alt="Pieza" draggable />
+                      <Image width={50} height={50} src={celda.imagen} alt="Pieza" draggable />
                     ) : (
                       movimientosPermitidos?.length > 0 &&
                       movimientosPermitidos?.map(
