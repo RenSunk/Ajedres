@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
-import { Peon } from "../objetos/peon";
 import { Caballo } from "../objetos/caballo";
-import { Torre } from "../objetos/torre";
-import { Arfil } from "../objetos/arfil";
-import { Reina } from "../objetos/reina";
-import { Rey } from "../objetos/rey";
 import { PanelFichas } from "../componentes/panelFichas";
+import Image from "next/image";
 
 const inicializarPiezas = (Pieza, posiciones, esBlanco) =>
   posiciones.map(([x, y]) => new Pieza(x, y, esBlanco));
