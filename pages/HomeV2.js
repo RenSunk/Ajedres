@@ -175,6 +175,7 @@ export default function HomeV2() {
                           celda.x === x &&
                           celda.y === y && (
                             <div
+                              key={x + y}
                               style={{
                                 display: "flex",
                                 justifyContent: "center",
